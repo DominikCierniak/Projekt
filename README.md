@@ -1,0 +1,1 @@
+Przyrost 1
