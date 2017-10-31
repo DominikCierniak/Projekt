@@ -1,32 +1,59 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Scanner;
+
 
 public class Sql {
-    protected String zapytanie;
-    public Sql() {}
+    private String zapytanie;
+    private int i;
+    private static String[] x = new String[20];
+    public Sql(String zapytanie, int i) {
+        this.zapytanie = zapytanie;
+        this.i = i;
+    }
+
     public String getZapytanie() {
         return zapytanie;
     }
-    public void setZapytanie(String zapytanie) {
-        Scanner scan = new Scanner(System.in);
-        this.zapytanie = scan.nextLine();
-        scan.close();
-    }
-    public void podzial() throws FileNotFoundException {
-        zapytanie = zapytanie.toLowerCase();
-        if (zapytanie.matches("select.+from.+order by+") ||
-                zapytanie.matches("select.+from.+") ||
-                zapytanie.matches("select.+from.+where.+") ||
-                zapytanie.matches("select.+from.+where.+order by.+")) {
-            System.out.println("Prawidłowe zapytanie");
-            PrintWriter zapis = new PrintWriter("odp.txt");
-            zapis.println(zapytanie);
-            zapis.close();        }
 
-        else if (zapytanie.matches("select.*where.+") ||
-                zapytanie.matches("select.*order by.+"))
-            System.out.println("Błędne zapytanie");
+    public int getI() {
+        return i;
+    }
+
+    public boolean parsowanie() {
+        zapytanie = zapytanie.toLowerCase();
+        int select = zapytanie.indexOf("select");
+        int from = zapytanie.indexOf("from");
+        int where = zapytanie.indexOf("where");
+        int order = zapytanie.indexOf("order by");
+        boolean zapytanieJestOk = false;
+        if (select != -1) {
+            if (from != -1 && select < from) {
+                if (where != -1 && from < where || where == -1) {
+                    if (order != -1 && where < order || order == -1)
+                        zapytanieJestOk = true;
+                }}} else return zapytanieJestOk;
+        return zapytanieJestOk;
+    }
+    public void podzial()  {
+        if (parsowanie()) {
+            System.out.println("Prawidłowe zapytanie");
+            x[i] = getI()+". "+getZapytanie();
+        }
+        else
+            System.err.println("Błędne zapytanie");
+
+    }
+            /* |
+               |    NIE DZIALA
+               v
+    */
+    public static void zapis() throws FileNotFoundException {
+        PrintWriter zapis = new PrintWriter("odp.txt");
+        for(int i=1 ; i<x.length; i++ ) {
+            if(x[i]!= null)
+                zapis.println(x[i]);
+
+        }
 
     }
 }
